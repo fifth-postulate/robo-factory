@@ -58,5 +58,12 @@ commonalities(1, X, Y) :-
 commonalities(0, X, Y) :-
   X = robot(U, V, W), Y = robot(R, S, T), different(R, U), different(S, V), different(T, W).
 
-candidate(C, ((K, X), (L, Y), (M, Z))) :-
-  commonalities(K, C, X), commonalities(L, C, Y), commonalities(M, C, Z).
+%! candidate(+C:robot, +Info:List) is det
+%! candidate(-C:robot, +Info:List) is det
+%
+% True if candidate agrees with all the info
+% Info is a list of (K, R). A candidate agrees with info (K, R) if
+% commonalities(K, C, R).
+candidate(C, []) :- C = robot(_, _, _).
+candidate(C, [(K, X)|Info]) :-
+  commonalities(K, C, X), candidates(C, Info).
